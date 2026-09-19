@@ -1,39 +1,32 @@
-# Web Application
+# 🛒 E-Commerce System Integration & REST API
 
-โปรเจกต์ระบบร้านค้าออนไลน์ (E-Commerce Web Application) สำหรับการเรียนรู้การรวมระบบ (System Integration) และสถาปัตยกรรมระบบ
-
----
-
-## 📊 การประเมินผลงานตนเอง (Self-Assessment)
-* **ความคืบหน้าภาพรวมของระบบ:** `85%`
+โปรเจกต์ระบบร้านค้าออนไลน์ (E-Commerce Web Application) พร้อมสถาปัตยกรรม Microservices และ Containerization ด้วย Docker
 
 ---
 
-## 📌 สรุปสถานะการดำเนินงาน (Progress Report)
-
-### ✅ ส่วนที่ดำเนินการเสร็จสิ้น (Completed)
-* **ระบบยืนยันตัวตนและการเข้าสู่ระบบ (Authentication & User Management)**
-  * ระบบสมัครสมาชิก, เข้าสู่ระบบ และจัดการ Session (`auth.php`, `logout.php`)
-* **ระบบสำหรับผู้ซื้อ (Buyer Features)**
-  * หน้ารายการสินค้าหลัก (`index.php`)[cite: 1]
-  * ระบบจัดการตะกร้าสินค้า (`cart.php`)[cite: 1]
-  * ระบบสั่งซื้อสินค้า (`checkout.php`)[cite: 1]
-  * ระบบชำระเงิน (`payment.php`)[cite: 1]
-* **ระบบสำหรับผู้ขาย (Seller Center & Dashboard)**
-  * ระบบยื่นเรื่องสมัครเป็นผู้ขาย (`apply_seller.php`)[cite: 1]
-  * ศูนย์จัดการข้อมูลผู้ขาย และ แดชบอร์ดสรุปยอด (`seller_center.php`, `seller_dashboard.php`)[cite: 1]
-  * ระบบจัดการเพิ่มและแก้ไขรายการสินค้า (`add_product.php`, `edit_product.php`, `seller_add_product.php`, `seller_edit_product.php`)[cite: 1]
-
-### ⏳ ส่วนที่ยังไม่เสร็จสิ้น / อยู่ระหว่างพัฒนา (Pending / In Progress)
-* **ระบบตรวจสอบการชำระเงินฝั่งผู้ดูแลระบบ:** ระบบตรวจสอบและอนุมัติ QR Code สลิปโอนเงิน (`admin_qrcode.php`)[cite: 1]
-* **Microservices Decoupling:** การปรับปรุงจุดเชื่อมต่อ API ระหว่าง Microservices ให้ทำงานเป็นอิสระต่อกันสมบูรณ์ยิ่งขึ้น
-* **Data Validation & Security:** เพิ่มเติมการตรวจสอบข้อมูลฝั่ง Server-side เพื่อความปลอดภัยสูงสุด
+## 📊 1. การประเมินผลงานตนเอง (Self-Assessment)
+* **ความคืบหน้าภาพรวม:** `85%` (เสร็จสิ้นระบบการทำงานหลักทั้งหมด)
 
 ---
 
-## 🏗️ สถาปัตยกรรมระบบและเทคโนโลยี (Architecture & Tech Stack)
+## 📌 2. รายงานสรุปสถานะการทำงาน (Progress Report)
 
-### 1. Microservices Architecture Diagram
+### ✅ ส่วนที่เสร็จสิ้น (Completed)
+* **ระบบสิทธิ์และผู้ใช้:** สมัครสมาชิก, ล็อกอิน, ล็อกเอาต์ (`auth.php`, `logout.php`)[cite: 1]
+* **ระบบสินค้า:** หน้ารายการสินค้า, เพิ่ม/แก้ไขสินค้า (`index.php`, `add_product.php`, `edit_product.php`)[cite: 1]
+* **ระบบสั่งซื้อ:** ตะกร้าสินค้า, สั่งซื้อสินค้า, แจ้งชำระเงิน (`cart.php`, `checkout.php`, `payment.php`)[cite: 1]
+* **ระบบผู้ขาย:** ลงทะเบียนผู้ขาย, แดชบอร์ดผู้ขาย, ศูนย์จัดการร้านค้า (`apply_seller.php`, `seller_center.php`, `seller_dashboard.php`)[cite: 1]
+* **Docker Setup:** กำหนดไฟล์ `Dockerfile` และ `docker-compose.yml` สำหรับรัน Container
+
+### ⏳ ส่วนที่ยังไม่เสร็จ (Pending)
+* **ระบบแอดมิน:** ตรวจสอบอนุมัติสลิปชำระเงิน (`admin_qrcode.php`)[cite: 1]
+* **Security & Validation:** เพิ่มระบบตรวจสอบความปลอดภัยของ API เพิ่มเติม
+
+---
+
+## 🏗️ 3. Architecture & Tech Stack Diagrams
+
+### 3.1 Microservices Architecture Diagram
 ```mermaid
 graph TD
     classDef client fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
@@ -41,11 +34,8 @@ graph TD
     classDef service fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
     classDef db fill:#f3e5f5,stroke:#4a148c,stroke-width:2px;
 
-    User[💻 Client Browser]:::client
-
-    subgraph Infrastructure
-        Gateway[🌐 Apache Web Server / API Router]:::gateway
-    end
+    User[💻 Client / Browser]:::client
+    Gateway[🌐 Apache Router / API Gateway]:::gateway
 
     subgraph Microservices Layer
         AuthSvc["🔐 Auth Service<br/>(auth.php, logout.php)"]:::service
@@ -61,11 +51,10 @@ graph TD
         DB_Order[("🗄️ Order DB")]:::db
         DB_Payment[("🗄️ Payment DB")]:::db
         DB_Seller[("🗄️ Seller DB")]:::db
-        Storage["📁 File Storage<br/>(/uploads)"]:::db
+        Storage["📁 File Storage (/uploads)"]:::db
     end
 
-    User -->|HTTP Requests| Gateway
-    
+    User --> Gateway
     Gateway --> AuthSvc
     Gateway --> ProductSvc
     Gateway --> CartOrderSvc
@@ -80,65 +69,76 @@ graph TD
     SellerSvc --> DB_Seller
 ```
 
-### 2. Technology Stack Diagram
+### 3.2 Technology Stack Diagram
 ```mermaid
 graph TB
-    subgraph Frontend ["🎨 Frontend Layer"]
+    subgraph Frontend ["🎨 Frontend"]
         HTML["HTML5"]
-        CSS["CSS3 / Styling (assets/)"]
+        CSS["CSS3 (assets/)"]
         JS["JavaScript (assets/)"]
     end
 
-    subgraph Backend ["⚙️ Backend Layer"]
-        PHP["PHP (Core Logic)"]
-        Includes["Includes / Config Modules"]
+    subgraph Backend ["⚙️ Backend"]
+        PHP["PHP 8.2 Engine"]
+        Config["Includes & Config Modules"]
     end
 
-    subgraph Database ["🗄️ Database & Storage Layer"]
-        MySQL[("MySQL Database")]
-        Uploads["Uploads Folder (Media)"]
+    subgraph Data ["🗄️ Data & Storage"]
+        MySQL[("MySQL 8.0")]
+        Uploads["Uploads Storage (/uploads)"]
     end
 
-    subgraph Infrastructure ["☁️ Infrastructure & Tools"]
+    subgraph Container ["🐳 Container & Tools"]
+        Docker["Docker & Docker Compose"]
         Apache["Apache Web Server"]
-        Git["Git / GitHub"]
+        Git["Git Version Control"]
     end
 
-    Frontend <-->|HTTP / AJAX| Backend
-    Backend <-->|PDO / MySQLi| MySQL
-    Backend -->|File Management| Uploads
-    Backend --- Apache
-    Backend --- Git
+    Frontend <--> Backend
+    Backend <--> MySQL
+    Backend --> Uploads
+    Backend --- Container
 ```
-
-#### รายการเทคโนโลยีที่เลือกใช้ (Technology Stack Overview):
-* **Backend Language:** PHP Source Files
-* **Frontend:** HTML5, CSS3, JavaScript
-* **Database:** MySQL
-* **Web Server:** Apache / Nginx
-* **Version Control:** Git & GitHub / GitLab
 
 ---
 
-## 📁 โครงสร้างโปรเจกต์ (Project Structure)
+## 📡 4. REST API Specification
 
-```text
-webapp/
-├── assets/                  # ไฟล์สไตล์ (CSS), สคริปต์ (JS) และรูปภาพประกอบเว็บ[cite: 1]
-├── config/                  # ไฟล์การเชื่อมต่อฐานข้อมูลและการตั้งค่าระบบ[cite: 1]
-├── includes/                # ไฟล์ Header/Footer และฟังก์ชันส่วนกลาง[cite: 1]
-├── uploads/                 # โฟลเดอร์เก็บไฟล์รูปภาพสินค้าที่อัปโหลด[cite: 1]
-├── add_product.php          # หน้าจัดการเพิ่มสินค้า[cite: 1]
-├── admin_qrcode.php         # ระบบจัดการ QR Code ฝั่งแอดมิน[cite: 1]
-├── apply_seller.php         # หน้าลงทะเบียนผู้ขาย[cite: 1]
-├── auth.php                 # ระบบล็อกอิน/ลงทะเบียน[cite: 1]
-├── cart.php                 # หน้าตะกร้าสินค้า[cite: 1]
-├── checkout.php             # หน้าชำระเงินและยืนยันคำสั่งซื้อ[cite: 1]
-├── edit_product.php         # หน้าจัดการแก้ไขสินค้า[cite: 1]
-├── index.php                # หน้าแรกของเว็บไซต์[cite: 1]
-├── logout.php               # ออกจากระบบ[cite: 1]
-├── payment.php              # หน้าแจ้งชำระเงิน[cite: 1]
-├── seller_add_product.php   # หน้าเพิ่มสินค้าของผู้ขาย[cite: 1]
-├── seller_center.php        # ศูนย์จัดการร้านค้า[cite: 1]
-├── seller_dashboard.php     # สรุปผลการขายของผู้ขาย[cite: 1]
-└── seller_edit_product.php  # หน้าแก้ไขสินค้าของผู้ขาย[cite: 1]
+### Authentication & User Management
+* `POST /api/v1/auth/register` - สมัครสมาชิก
+* `POST /api/v1/auth/login` - เข้าสู่ระบบ (`auth.php`)[cite: 1]
+* `POST /api/v1/auth/logout` - ออกจากระบบ (`logout.php`)[cite: 1]
+* `GET /api/v1/auth/me` - ดึงข้อมูลผู้ใช้ปัจจุบัน
+
+### Product Management
+* `GET /api/v1/products` - ดึงรายการสินค้าทั้งหมด (`index.php`)[cite: 1]
+* `GET /api/v1/products/{id}` - ดึงรายละเอียดสินค้า
+* `POST /api/v1/products` - เพิ่มสินค้าใหม่ (`add_product.php`)[cite: 1]
+* `PUT /api/v1/products/{id}` - แก้ไขสินค้า (`edit_product.php`)[cite: 1]
+* `DELETE /api/v1/products/{id}` - ลบสินค้า
+
+### Cart & Orders
+* `GET /api/v1/cart` - ดึงรายการในตะกร้า (`cart.php`)[cite: 1]
+* `POST /api/v1/cart/items` - เพิ่มสินค้าลงตะกร้า
+* `POST /api/v1/orders/checkout` - เช็กเอาต์สั่งซื้อ (`checkout.php`)[cite: 1]
+
+### Seller System
+* `POST /api/v1/sellers/apply` - สมัครเป็นผู้ขาย (`apply_seller.php`)[cite: 1]
+* `GET /api/v1/sellers/dashboard` - ดูแดชบอร์ดร้านค้า (`seller_dashboard.php`)[cite: 1]
+* `GET /api/v1/sellers/products` - รายการสินค้าในร้าน (`seller_center.php`)[cite: 1]
+
+### Payments
+* `POST /api/v1/payments/upload-slip` - แจ้งชำระเงิน (`payment.php`)[cite: 1]
+* `GET /api/v1/admin/payments/qrcode` - [Admin] ดูสลิป QR Code (`admin_qrcode.php`)[cite: 1]
+
+---
+
+## 🚀 5. วิธีการรันโปรเจกต์ด้วย Docker
+
+1. สั่งรัน Container:
+   ```bash
+   docker compose up -d --build
+   ```
+2. เข้าใช้งานระบบ:
+   * **Web & REST API:** `http://localhost:8080`
+   * **phpMyAdmin (จัดการฐานข้อมูล):** `http://localhost:8081` *(User: `root`, Pass: `rootpassword`)*
