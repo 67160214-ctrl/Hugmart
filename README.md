@@ -34,8 +34,51 @@
 ## 🏗️ สถาปัตยกรรมระบบและเทคโนโลยี (Architecture & Tech Stack)
 
 ### 1. Microservices Architecture Diagram
-![Microservices Architecture](docs/microservices-architecture.png)
-> *หมายเหตุ: โปรดนำไฟล์รูปภาพ Diagram สถาปัตยกรรมไปวางไว้ในโฟลเดอร์ `docs/microservices-architecture.png`*
+```mermaid
+graph TD
+    classDef client fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
+    classDef gateway fill:#fff3e0,stroke:#e65100,stroke-width:2px;
+    classDef service fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
+    classDef db fill:#f3e5f5,stroke:#4a148c,stroke-width:2px;
+
+    User[💻 Client Browser]:::client
+
+    subgraph Infrastructure
+        Gateway[🌐 Apache Web Server / API Router]:::gateway
+    end
+
+    subgraph Microservices Layer
+        AuthSvc["🔐 Auth Service<br/>(auth.php, logout.php)"]:::service
+        ProductSvc["📦 Product Service<br/>(index.php, add/edit_product.php)"]:::service
+        CartOrderSvc["🛒 Cart & Order Service<br/>(cart.php, checkout.php)"]:::service
+        PaymentSvc["💳 Payment Service<br/>(payment.php, admin_qrcode.php)"]:::service
+        SellerSvc["🏪 Seller Service<br/>(seller_center.php, seller_dashboard.php)"]:::service
+    end
+
+    subgraph Storage Layer
+        DB_Auth[("🗄️ Auth DB")]:::db
+        DB_Product[("🗄️ Product DB")]:::db
+        DB_Order[("🗄️ Order DB")]:::db
+        DB_Payment[("🗄️ Payment DB")]:::db
+        DB_Seller[("🗄️ Seller DB")]:::db
+        Storage["📁 File Storage<br/>(/uploads)"]:::db
+    end
+
+    User -->|HTTP Requests| Gateway
+    
+    Gateway --> AuthSvc
+    Gateway --> ProductSvc
+    Gateway --> CartOrderSvc
+    Gateway --> PaymentSvc
+    Gateway --> SellerSvc
+
+    AuthSvc --> DB_Auth
+    ProductSvc --> DB_Product
+    ProductSvc --> Storage
+    CartOrderSvc --> DB_Order
+    PaymentSvc --> DB_Payment
+    SellerSvc --> DB_Seller
+```
 
 ### 2. Technology Stack Diagram
 ![Technology Stack Diagram](docs/tech-stack.png)
