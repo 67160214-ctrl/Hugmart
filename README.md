@@ -1,4 +1,4 @@
-# Web Application E-Commerce & Microservices Integration
+# Web Application
 
 โปรเจกต์ระบบร้านค้าออนไลน์ (E-Commerce Web Application) สำหรับการเรียนรู้การรวมระบบ (System Integration) และสถาปัตยกรรมระบบ
 
