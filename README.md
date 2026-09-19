@@ -5,22 +5,23 @@
 ---
 
 ## 📊 1. การประเมินผลงานตนเอง (Self-Assessment)
-* **ความคืบหน้าภาพรวม:** `85%` (เสร็จสิ้นระบบการทำงานหลักทั้งหมด)
+* **ความคืบหน้าภาพรวม:** `90%` (จากทั้งหมด 100%)
+* **สถานะปัจจุบัน:** พัฒนาระบบงานหลักทั้งหมดเรียบร้อยแล้ว ติดตั้ง Container Environment และตั้งค่าฐานข้อมูลเรียบร้อย พร้อมสำหรับการทดสอบและใช้งาน
 
 ---
 
 ## 📌 2. รายงานสรุปสถานะการทำงาน (Progress Report)
 
 ### ✅ ส่วนที่เสร็จสิ้น (Completed)
-* **ระบบสิทธิ์และผู้ใช้:** สมัครสมาชิก, ล็อกอิน, ล็อกเอาต์ (`auth.php`, `logout.php`)[cite: 1]
-* **ระบบสินค้า:** หน้ารายการสินค้า, เพิ่ม/แก้ไขสินค้า (`index.php`, `add_product.php`, `edit_product.php`)[cite: 1]
-* **ระบบสั่งซื้อ:** ตะกร้าสินค้า, สั่งซื้อสินค้า, แจ้งชำระเงิน (`cart.php`, `checkout.php`, `payment.php`)[cite: 1]
-* **ระบบผู้ขาย:** ลงทะเบียนผู้ขาย, แดชบอร์ดผู้ขาย, ศูนย์จัดการร้านค้า (`apply_seller.php`, `seller_center.php`, `seller_dashboard.php`)[cite: 1]
-* **Docker Setup:** กำหนดไฟล์ `Dockerfile` และ `docker-compose.yml` สำหรับรัน Container
+* **ระบบสิทธิ์และผู้ใช้:** สมัครสมาชิก, ล็อกอิน, ล็อกเอาต์ (`auth.php`, `logout.php`)
+* **ระบบสินค้า:** หน้ารายการสินค้า, เพิ่ม/แก้ไขสินค้า (`index.php`, `add_product.php`, `edit_product.php`)
+* **ระบบสั่งซื้อ:** ตะกร้าสินค้า, สั่งซื้อสินค้า, แจ้งชำระเงิน (`cart.php`, `checkout.php`, `payment.php`)
+* **ระบบผู้ขาย:** ลงทะเบียนผู้ขาย, แดชบอร์ดผู้ขาย, ศูนย์จัดการร้านค้า (`apply_seller.php`, `seller_center.php`, `seller_dashboard.php`)
+* **Docker Setup:** กำหนดไฟล์ `Dockerfile` และ `docker-compose.yml` สำหรับรัน Web API, MySQL และ phpMyAdmin
 
 ### ⏳ ส่วนที่ยังไม่เสร็จ (Pending)
-* **ระบบแอดมิน:** ตรวจสอบอนุมัติสลิปชำระเงิน (`admin_qrcode.php`)[cite: 1]
-* **Security & Validation:** เพิ่มระบบตรวจสอบความปลอดภัยของ API เพิ่มเติม
+* **ระบบแอดมิน:** ตรวจสอบอนุมัติสลิปชำระเงิน (`admin_qrcode.php`)
+* **Security & Validation:** ปรับปรุงมาตรการตรวจสอบข้อมูลเข้า (Input Validation) และความปลอดภัยของ API Endpoint เพิ่มเติม
 
 ---
 
@@ -69,35 +70,52 @@ graph TD
     SellerSvc --> DB_Seller
 ```
 
-### 3.2 Technology Stack Diagram
+### 3.2 Technology Stack Diagram (Integrated with Services Architecture)
 ```mermaid
 graph TB
-    subgraph Frontend ["🎨 Frontend"]
-        HTML["HTML5"]
-        CSS["CSS3 (assets/)"]
-        JS["JavaScript (assets/)"]
+    subgraph ClientLayer ["💻 1. Client & Presentation Layer"]
+        UI["HTML5 / CSS3 / JavaScript"]
+        Assets["Static Assets (/assets)"]
     end
 
-    subgraph Backend ["⚙️ Backend"]
-        PHP["PHP 8.2 Engine"]
-        Config["Includes & Config Modules"]
+    subgraph WebGatewayLayer ["🌐 2. Web Server & Gateway Layer"]
+        Apache["Apache 2.4 Web Server"]
+        Htaccess["Rewrite Rules (.htaccess / Router)"]
     end
 
-    subgraph Data ["🗄️ Data & Storage"]
-        MySQL[("MySQL 8.0")]
-        Uploads["Uploads Storage (/uploads)"]
+    subgraph AppServiceLayer ["⚙️ 3. PHP Runtime & Microservice Handlers"]
+        PHPRuntime["PHP 8.x Engine (PDO MySQL)"]
+        subgraph Handlers ["Service Modules"]
+            AuthModule["Auth Handler"]
+            ProductModule["Product Handler"]
+            OrderModule["Cart & Order Handler"]
+            PaymentModule["Payment Handler"]
+            SellerModule["Seller Handler"]
+        end
     end
 
-    subgraph Container ["🐳 Container & Tools"]
-        Docker["Docker & Docker Compose"]
-        Apache["Apache Web Server"]
-        Git["Git Version Control"]
+    subgraph DataStorageLayer ["🗄️ 4. Data & Persistence Layer"]
+        MySQL[("MySQL 8.0 Engine")]
+        DatabaseSchema["Schema: s67160214"]
+        UploadStorage["File Storage (/uploads)"]
     end
 
-    Frontend <--> Backend
-    Backend <--> MySQL
-    Backend --> Uploads
-    Backend --- Container
+    subgraph ContainerInfra ["🐳 5. Infrastructure & Orchestration"]
+        DockerEngine["Docker Engine"]
+        Compose["Docker Compose Orchestrator"]
+        PMA["phpMyAdmin (Database Tool)"]
+    end
+
+    ClientLayer --> WebGatewayLayer
+    WebGatewayLayer --> AppServiceLayer
+    PHPRuntime --> Handlers
+    Handlers --> DataStorageLayer
+    MySQL --- DatabaseSchema
+    PaymentModule & ProductModule --> UploadStorage
+
+    ContainerInfra -.- WebGatewayLayer
+    ContainerInfra -.- AppServiceLayer
+    ContainerInfra -.- DataStorageLayer
 ```
 
 ---
@@ -106,39 +124,54 @@ graph TB
 
 ### Authentication & User Management
 * `POST /api/v1/auth/register` - สมัครสมาชิก
-* `POST /api/v1/auth/login` - เข้าสู่ระบบ (`auth.php`)[cite: 1]
-* `POST /api/v1/auth/logout` - ออกจากระบบ (`logout.php`)[cite: 1]
+* `POST /api/v1/auth/login` - เข้าสู่ระบบ (`auth.php`)
+* `POST /api/v1/auth/logout` - ออกจากระบบ (`logout.php`)
 * `GET /api/v1/auth/me` - ดึงข้อมูลผู้ใช้ปัจจุบัน
 
 ### Product Management
-* `GET /api/v1/products` - ดึงรายการสินค้าทั้งหมด (`index.php`)[cite: 1]
+* `GET /api/v1/products` - ดึงรายการสินค้าทั้งหมด (`index.php`)
 * `GET /api/v1/products/{id}` - ดึงรายละเอียดสินค้า
-* `POST /api/v1/products` - เพิ่มสินค้าใหม่ (`add_product.php`)[cite: 1]
-* `PUT /api/v1/products/{id}` - แก้ไขสินค้า (`edit_product.php`)[cite: 1]
+* `POST /api/v1/products` - เพิ่มสินค้าใหม่ (`add_product.php`)
+* `PUT /api/v1/products/{id}` - แก้ไขสินค้า (`edit_product.php`)
 * `DELETE /api/v1/products/{id}` - ลบสินค้า
 
 ### Cart & Orders
-* `GET /api/v1/cart` - ดึงรายการในตะกร้า (`cart.php`)[cite: 1]
+* `GET /api/v1/cart` - ดึงรายการในตะกร้า (`cart.php`)
 * `POST /api/v1/cart/items` - เพิ่มสินค้าลงตะกร้า
-* `POST /api/v1/orders/checkout` - เช็กเอาต์สั่งซื้อ (`checkout.php`)[cite: 1]
+* `POST /api/v1/orders/checkout` - เช็กเอาต์สั่งซื้อ (`checkout.php`)
 
 ### Seller System
-* `POST /api/v1/sellers/apply` - สมัครเป็นผู้ขาย (`apply_seller.php`)[cite: 1]
-* `GET /api/v1/sellers/dashboard` - ดูแดชบอร์ดร้านค้า (`seller_dashboard.php`)[cite: 1]
-* `GET /api/v1/sellers/products` - รายการสินค้าในร้าน (`seller_center.php`)[cite: 1]
+* `POST /api/v1/sellers/apply` - สมัครเป็นผู้ขาย (`apply_seller.php`)
+* `GET /api/v1/sellers/dashboard` - ดูแดชบอร์ดร้านค้า (`seller_dashboard.php`)
+* `GET /api/v1/sellers/products` - รายการสินค้าในร้าน (`seller_center.php`)
 
 ### Payments
-* `POST /api/v1/payments/upload-slip` - แจ้งชำระเงิน (`payment.php`)[cite: 1]
-* `GET /api/v1/admin/payments/qrcode` - [Admin] ดูสลิป QR Code (`admin_qrcode.php`)[cite: 1]
+* `POST /api/v1/payments/upload-slip` - แจ้งชำระเงิน (`payment.php`)
+* `GET /api/v1/admin/payments/qrcode` - [Admin] ดูสลิป QR Code (`admin_qrcode.php`)
 
 ---
 
 ## 🚀 5. วิธีการรันโปรเจกต์ด้วย Docker
 
-1. สั่งรัน Container:
+1. **สั่งรัน Container ทั้งหมด:**
    ```bash
    docker compose up -d --build
    ```
-2. เข้าใช้งานระบบ:
-   * **Web & REST API:** `http://localhost:8080`
-   * **phpMyAdmin (จัดการฐานข้อมูล):** `http://localhost:8081` *(User: `root`, Pass: `rootpassword`)*
+
+2. **หากต้องการล้างข้อมูลฐานข้อมูลและรันระบบใหม่ทั้งหมด:**
+   ```bash
+   docker compose down -v
+   docker compose up -d --build
+   ```
+
+3. **ช่องทางการเข้าใช้งาน:**
+   * **Web Application / REST API:** [http://localhost:8080](http://localhost:8080)
+   * **phpMyAdmin:** [http://localhost:8081](http://localhost:8081)
+
+4. **ข้อมูลการเชื่อมต่อฐานข้อมูล (Database Connection Credentials):**
+   * **Host:** `db`
+   * **Database Name:** `s67160214`
+   * **Username:** `s67160214`
+   * **Password:** `W5xPdkn9`
+   * **Root Password:** `rootpassword`
+   * **MySQL Internal Port:** `3306`
