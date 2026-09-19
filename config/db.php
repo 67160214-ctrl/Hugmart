@@ -3,7 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-$host = 'localhost';
+$host = 'db';
 $dbname = 's67160214';   // ชื่อฐานข้อมูล (หากไม่ได้ผลให้ลองเปลี่ยนเป็น '67160214')
 $username = 's67160214'; // Username ตามภาพ
 $password = 'W5xPdkn9';  // Password ตามภาพ
