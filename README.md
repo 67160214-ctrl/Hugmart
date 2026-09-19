@@ -81,8 +81,35 @@ graph TD
 ```
 
 ### 2. Technology Stack Diagram
-![Technology Stack Diagram](docs/tech-stack.png)
-> *หมายเหตุ: โปรดนำไฟล์รูปภาพ Diagram แสดง Tech Stack ไปวางไว้ในโฟลเดอร์ `docs/tech-stack.png`*
+```mermaid
+graph TB
+    subgraph Frontend ["🎨 Frontend Layer"]
+        HTML["HTML5"]
+        CSS["CSS3 / Styling (assets/)"]
+        JS["JavaScript (assets/)"]
+    end
+
+    subgraph Backend ["⚙️ Backend Layer"]
+        PHP["PHP (Core Logic)"]
+        Includes["Includes / Config Modules"]
+    end
+
+    subgraph Database ["🗄️ Database & Storage Layer"]
+        MySQL[("MySQL Database")]
+        Uploads["Uploads Folder (Media)"]
+    end
+
+    subgraph Infrastructure ["☁️ Infrastructure & Tools"]
+        Apache["Apache Web Server"]
+        Git["Git / GitHub"]
+    end
+
+    Frontend <-->|HTTP / AJAX| Backend
+    Backend <-->|PDO / MySQLi| MySQL
+    Backend -->|File Management| Uploads
+    Backend --- Apache
+    Backend --- Git
+```
 
 #### รายการเทคโนโลยีที่เลือกใช้ (Technology Stack Overview):
 * **Backend Language:** PHP Source Files
